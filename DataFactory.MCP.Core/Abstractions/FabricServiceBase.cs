@@ -56,12 +56,26 @@ public abstract class FabricServiceBase
 
     protected async Task<T?> PostAsync<T>(string endpoint, object request) where T : class
     {
+        ArgumentNullException.ThrowIfNull(request, nameof(request));
+
         var url = FabricUrlBuilder.ForFabricApi()
             .WithLiteralPath(endpoint)
             .Build();
         Logger.LogInformation("Posting to: {Url}", url);
 
-        var jsonContent = JsonSerializer.Serialize(request, JsonOptions);
+        string jsonContent;
+        try
+        {
+            jsonContent = JsonSerializer.Serialize(request, JsonOptions);
+            Logger.LogDebug("Request payload size: {SizeBytes} bytes", jsonContent.Length);
+        }
+        catch (JsonException serializationEx)
+        {
+            Logger.LogError(serializationEx, "Failed to serialize request object for endpoint: {Endpoint}. Request type: {RequestType}",
+                endpoint, request.GetType().Name);
+            throw;
+        }
+
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
         var response = await HttpClient.PostAsync(url, content);
@@ -73,12 +87,26 @@ public abstract class FabricServiceBase
     /// </summary>
     protected async Task<byte[]> PostAsBytesAsync(string endpoint, object request)
     {
+        ArgumentNullException.ThrowIfNull(request, nameof(request));
+
         var url = FabricUrlBuilder.ForFabricApi()
             .WithLiteralPath(endpoint)
             .Build();
         Logger.LogInformation("Posting to: {Url}", url);
 
-        var jsonContent = JsonSerializer.Serialize(request, JsonOptions);
+        string jsonContent;
+        try
+        {
+            jsonContent = JsonSerializer.Serialize(request, JsonOptions);
+            Logger.LogDebug("Request payload size: {SizeBytes} bytes", jsonContent.Length);
+        }
+        catch (JsonException serializationEx)
+        {
+            Logger.LogError(serializationEx, "Failed to serialize request object for endpoint: {Endpoint}. Request type: {RequestType}",
+                endpoint, request.GetType().Name);
+            throw;
+        }
+
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
         var response = await HttpClient.PostAsync(url, content);
@@ -91,12 +119,26 @@ public abstract class FabricServiceBase
     /// </summary>
     protected async Task<bool> PostNoContentAsync(string endpoint, object request)
     {
+        ArgumentNullException.ThrowIfNull(request, nameof(request));
+
         var url = FabricUrlBuilder.ForFabricApi()
             .WithLiteralPath(endpoint)
             .Build();
         Logger.LogInformation("Posting to: {Url}", url);
 
-        var jsonContent = JsonSerializer.Serialize(request, JsonOptions);
+        string jsonContent;
+        try
+        {
+            jsonContent = JsonSerializer.Serialize(request, JsonOptions);
+            Logger.LogDebug("Request payload size: {SizeBytes} bytes", jsonContent.Length);
+        }
+        catch (JsonException serializationEx)
+        {
+            Logger.LogError(serializationEx, "Failed to serialize request object for endpoint: {Endpoint}. Request type: {RequestType}",
+                endpoint, request.GetType().Name);
+            return false;
+        }
+
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
         var response = await HttpClient.PostAsync(url, content);
