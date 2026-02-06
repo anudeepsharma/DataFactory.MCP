@@ -13,6 +13,7 @@ using DataFactory.MCP.Services.DMTSv2;
 using DataFactory.MCP.Services.Notifications;
 using DataFactory.MCP.Tools;
 using DataFactory.MCP.Tools.Dataflow;
+using DataFactory.MCP.Tools.Pipeline;
 
 namespace DataFactory.MCP.Extensions;
 
@@ -69,6 +70,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IFabricConnectionService, FabricConnectionService>()
             .AddSingleton<IFabricWorkspaceService, FabricWorkspaceService>()
             .AddSingleton<IFabricDataflowService, FabricDataflowService>()
+            .AddSingleton<IFabricPipelineService, FabricPipelineService>()
             .AddSingleton<IFabricCapacityService, FabricCapacityService>()
             .AddSingleton<IAzureResourceDiscoveryService, AzureResourceDiscoveryService>()
             .AddSingleton<FabricDataSourceConnectionFactory>()
@@ -102,6 +104,7 @@ public static class ServiceCollectionExtensions
             .WithTools<WorkspacesTool>()
             .WithTools<DataflowTool>()
             .WithTools<DataflowRefreshTool>()
+            .WithTools<PipelineTool>()
             .WithTools<CapacityTool>()
             .WithTools<AzureResourceDiscoveryTool>()
             .WithTools<MDocumentTool>();
